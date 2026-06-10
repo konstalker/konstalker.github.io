@@ -470,6 +470,195 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Support modal functions
+function openSupportModal() {
+    const modal = document.getElementById('supportModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // Update URL hash
+        if (history.pushState) {
+            history.pushState(null, null, '#support');
+        } else {
+            window.location.hash = '#support';
+        }
+    }
+}
+
+function closeSupportModal() {
+    const modal = document.getElementById('supportModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        // Remove URL hash
+        if (history.pushState) {
+            history.pushState(null, null, window.location.pathname + window.location.search);
+        } else {
+            window.location.hash = '';
+        }
+    }
+}
+
+// Modal functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        // Если открываем дочернее модальное окно, закрываем основное окно поддержки
+        if (modalId === 'donationModal' || modalId === 'cryptoModal' || modalId === 'cardModal') {
+            const supportModal = document.getElementById('supportModal');
+            if (supportModal && supportModal.classList.contains('active')) {
+                supportModal.classList.remove('active');
+            }
+        }
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Crypto tab switching
+function switchCrypto(crypto) {
+    // Remove active class from all tabs and content
+    document.querySelectorAll('.crypto-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.crypto-content').forEach(content => content.classList.remove('active'));
+    
+    // Add active class to selected tab and content
+    document.querySelector(`[data-crypto="${crypto}"]`).classList.add('active');
+    document.querySelector(`[data-crypto-content="${crypto}"]`).classList.add('active');
+}
+
+// Copy address function
+function copyAddress(address) {
+    navigator.clipboard.writeText(address).then(() => {
+        // Find the clicked address element and add copied class
+        const addressElements = document.querySelectorAll('.crypto-address');
+        addressElements.forEach(element => {
+            if (element.textContent.trim() === address) {
+                element.classList.add('copied');
+                setTimeout(() => {
+                    element.classList.remove('copied');
+                }, 2000);
+            }
+        });
+    }).catch(err => {
+        console.error('Failed to copy address: ', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    });
+}
+
+// Event listeners for modals
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal open buttons
+    const openCardModal = document.getElementById('openCardModal');
+    const openDonationModal = document.getElementById('openDonationModal');
+    const openCryptoModal = document.getElementById('openCryptoModal');
+    
+    if (openCardModal) {
+        openCardModal.addEventListener('click', () => openModal('cardModal'));
+    }
+    if (openDonationModal) {
+        openDonationModal.addEventListener('click', () => openModal('donationModal'));
+    }
+    if (openCryptoModal) {
+        openCryptoModal.addEventListener('click', () => openModal('cryptoModal'));
+    }
+    
+    // Modal close buttons
+    const closeSupportModalBtn = document.getElementById('closeSupportModal');
+    const closeCardModal = document.getElementById('closeCardModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const closeCryptoModal = document.getElementById('closeCryptoModal');
+    
+    if (closeSupportModalBtn) {
+        closeSupportModalBtn.addEventListener('click', () => closeSupportModal());
+    }
+    
+    // Check URL hash on page load
+    if (window.location.hash === '#support') {
+        openSupportModal();
+    }
+    
+    // Listen for hash changes (back/forward buttons)
+    window.addEventListener('hashchange', function() {
+        if (window.location.hash === '#support') {
+            openSupportModal();
+        } else {
+            const supportModal = document.getElementById('supportModal');
+            if (supportModal && supportModal.classList.contains('active')) {
+                closeSupportModal();
+            }
+        }
+    });
+    if (closeCardModal) {
+        closeCardModal.addEventListener('click', () => closeModal('cardModal'));
+    }
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => closeModal('donationModal'));
+    }
+    if (closeCryptoModal) {
+        closeCryptoModal.addEventListener('click', () => closeModal('cryptoModal'));
+    }
+    
+    // Crypto tab switching
+    document.querySelectorAll('.crypto-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const crypto = tab.getAttribute('data-crypto');
+            switchCrypto(crypto);
+        });
+    });
+    
+    // Address copying
+    document.querySelectorAll('.crypto-address').forEach(address => {
+        address.addEventListener('click', () => {
+            const addressText = address.getAttribute('data-address') || address.textContent.trim();
+            copyAddress(addressText);
+        });
+    });
+});
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('donation-modal')) {
+        const modalId = event.target.id;
+        if (modalId === 'supportModal') {
+            closeSupportModal();
+        } else {
+            closeModal(modalId);
+        }
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const activeModal = document.querySelector('.donation-modal.active');
+        if (activeModal) {
+            if (activeModal.id === 'supportModal') {
+                closeSupportModal();
+            } else if (activeModal.id === 'donationModal' || activeModal.id === 'cryptoModal' || activeModal.id === 'cardModal') {
+                // Закрываем дочернее окно и открываем основное окно поддержки
+                closeModal(activeModal.id);
+                openSupportModal();
+            } else {
+                closeModal(activeModal.id);
+            }
+        }
+    }
+});
+
 // Installation section toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
     const installationToggle = document.getElementById('installationToggle');
