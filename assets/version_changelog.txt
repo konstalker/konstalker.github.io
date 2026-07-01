@@ -1,8 +1,9 @@
-20.06.2026 be v1.05e1
-+ cg_muteWorldSounds: add ts_dm5 howl
-+ ChatWindow CTRL+MWHEELUP/DOWN quick scroll
-+ ChatWindow CapsLock support (Q3E 20.06.2026+ only)
-* Teleport effect 1st person improvements
-* SHUD obituaries fix
-* SHUD PreDecorate/PostDecorate fix (text, image or only fill/border)
-* GlobalPos fix
+01.07.2026 be v1.06
++ ChatWindow: /mute and /unmute commands
++ emoji: :sad:, :sob:, :dogface:
++ Various fixes
++ Mapdata from .bsp (about 800 maps)
+  + cg_shadowItems
+  + cg_worldFlags and various improvements for CTF (flag status, team tasks)
+  + cg_drawSpawns
+  + cg_drawTPexit
