@@ -2,7 +2,7 @@
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
-SITE = "https://q3a.space/osp2"
+SITE = "https://osp2.q3a.space"
 PAGES = [
     "acknowledgements",
     "commands",
@@ -80,7 +80,7 @@ def render(
     <p class="lead" data-lang="ru">{lead_ru}</p>
     <p class="lead" data-lang="en">{lead_en}</p>
     <a class="site-link" data-outbound href="{target}" rel="noopener">
-      <span class="site-link-url">q3a.space/osp2</span>
+      <span class="site-link-url">osp2.q3a.space</span>
       <span class="site-link-hint" data-lang="ru">{hint_ru}</span>
       <span class="site-link-hint" data-lang="en">{hint_en}</span>
     </a>
@@ -117,8 +117,8 @@ def main():
     # Root chooser (no forced lang) — separate EN/RU "go now" fallbacks
     root = render("ru", "index.html", show_lang_active=True)
     root = root.replace(
-        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://q3a.space/osp2/ru/index.html">Go now</a></p>',
-        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://q3a.space/osp2/en/index.html">Go now</a></p>',
+        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://osp2.q3a.space/ru/index.html">Go now</a></p>',
+        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://osp2.q3a.space/en/index.html">Go now</a></p>',
     )
     write(BASE / "index.html", root)
 
@@ -133,8 +133,8 @@ def main():
 
     support = render("ru", "index.html", redirect_hash="support", show_lang_active=True)
     support = support.replace(
-        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://q3a.space/osp2/ru/index.html#support">Go now</a></p>',
-        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://q3a.space/osp2/en/index.html#support">Go now</a></p>',
+        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://osp2.q3a.space/ru/index.html#support">Go now</a></p>',
+        '<p class="redirect-now" data-lang="en"><a data-outbound href="https://osp2.q3a.space/en/index.html#support">Go now</a></p>',
     )
     write(BASE / "support.html", support)
     write(

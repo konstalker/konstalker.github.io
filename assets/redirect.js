@@ -1,5 +1,5 @@
 (function () {
-  const NEW_SITE = "https://q3a.space/osp2";
+  const NEW_SITE = "https://osp2.q3a.space";
   const REDIRECT_DELAY_SEC = 5;
   const html = document.documentElement;
   const langButtons = document.querySelectorAll("[data-set-lang]");
